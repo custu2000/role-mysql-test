@@ -6,7 +6,7 @@ galaxy_info:
 
   min_ansible_version: 1.2
 
-   platforms:
+  platforms:
    - name: Centos 
      versions:
      - all
@@ -15,5 +15,5 @@ galaxy_info:
    - Database
    - Mysql
 
-dependencies:
- - haha 
+  dependencies:
+  - haha 
