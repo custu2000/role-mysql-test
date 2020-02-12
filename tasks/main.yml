@@ -1,0 +1,55 @@
+---
+# tasks file for mysql_db
+    - name: Install MySQL community repository
+      yum:
+        name: "http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm"
+        state: present
+
+    - name: Install MySQL database
+      yum: name="{{ item }}" state=present
+      with_items:
+        - "mysql-server"
+        - "mysql-devel"
+
+    - name: Start MySQL Service
+      service:
+        name: mysqld
+        state: started
+        enabled: yes
+
+    - name: update mysql root password for all root accounts from local servers
+      mysql_user:
+        name: root
+        password: "{{ root_password }}"
+        priv: '*.*:ALL,GRANT'
+        host_all: true
+
+    - name: create MySQL configuration file
+      copy:
+        content: |
+          [client]
+          user=root
+          password="{{ root_password }}"
+        dest: "/root/.my.cnf"
+        owner: root
+        group: root
+        mode: 0600
+
+    - name: Create Application Database
+      mysql_db:
+        name: employee_db
+        state: present
+
+    - name: Create Database user
+      mysql_user:
+        name: db_user
+        password: Passw0rd
+        priv: '*.*:ALL'
+        state: present
+
+
+    - name: Install mysql-python package
+      yum:
+        name: MySQL-python
+        state: present
+
